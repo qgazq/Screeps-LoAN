@@ -160,26 +160,16 @@ def kick_from_alliance():
 
     my_id = session['my_id']
     alliance = users_model.alliance_of_user(my_id)
-    if (alliance is None):
+    if alliance is None:
         return "You are not in an alliance, can't kick anyone"
 
     username = request.form['username']
-
-    # Make sure user is in database and game world.
-    api = screeps_client.get_client()
-    auth = AuthPlayer(api)
-    ign = auth.id_from_name(username)
-
-    if not ign:
-        flash('User not present in game - remember usernames are case sensitive.')
-        return redirect(url_for("my_alliance"))
-
 
     # Get database id
     user_id = users_model.user_id_from_db(username)
 
     if not user_id:
-        flash('User not present in system - please try again later.')
+        flash('User not present in system')
         return redirect(url_for("my_alliance"))
 
     # Is user already in an alliance?
